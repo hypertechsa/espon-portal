@@ -1,4 +1,4 @@
-##### ESPON EGTC data playground <br>
+##### ESPON EGTC portal <br>
 ###### Call for tender: 2021/S 102-268091
 
 ##### Deadline for submission <br>
