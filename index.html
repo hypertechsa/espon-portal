@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>ESPON portal</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.2.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="flatly.min.css" />
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.js"></script>
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/papaparse@latest/papaparse.min.js"></script>
+
+    <style>
+      * {
+        overflow: unset !important;
+      }
+      section{
+        max-width: 1450px;
+        margin: auto
+      }
+      nav {
+        z-index: 1050 !important;
+      }
+      #map {
+        /* position: absolute;
+        top: 0;
+        bottom: 0; */
+        min-height: 550px;
+        height: 600px;
+        max-height: 750px;
+
+        
+        border-left: 10px solid blue;
+        border-right: 10px solid blue;
+      }
+      .attribution{
+        font-size: 10px;
+      }
+      .only-top{
+        border-top: 2px solid blue;
+
+      }
+      .only-left{
+        border-left: 10px solid blue;
+        height: 40px;
+        margin-left: 12px;
+
+      }
+      .only-right{
+        border-right: 10px solid blue;
+        height: 60px;
+      margin-right: 12px!important;
+      }
+      .feature__p {
+        font-size: 13px;
+      }
+      #chartID{
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- nav-start-->
+    <nav class="navbar navbar-expand-sm navbar-light bg-white shadow mb-5">
+      <a class="navbar-brand ml-5" href="#"
+        ><img src="ESPON-logo.png" alt="espon-logo" style="max-height: 70px"
+      /></a>
+      <button
+        class="navbar-toggler d-lg-none"
+        type="button"
+        data-toggle="collapse"
+        data-target="#collapsibleNavId"
+        aria-controls="collapsibleNavId"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="collapsibleNavId">
+        <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+          <li class="nav-item active">
+            <a class="nav-link" href="index.html"
+              >Home</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="explore.html">Explore</a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="datastory.html">Datastories</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="dashboard.html">Dashboards</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://hypertechsa.github.io/espon-playground/" target="_blank">Data playground</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="dropdownId"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+              >ESPON Tools</a
+            >
+            <div class="dropdown-menu" aria-labelledby="dropdownId">
+              <a class="dropdown-item" href="#">Rimap</a>
+              <a class="dropdown-item" href="#">Fuore</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <!-- nav-end-->
+
+    <section>
+
+    <div class="row mt-5">
+      <!--- list-start -->
+      <div class="col-lg-5">
+        <!-- feature-start-->
+        <div class="feature mt-5 ml-5 mr-5">
+          <br />
+          <span class="badge badge-pill badge-primary">Featured map</span>
+          <h3>
+            Circular Economy and Territorial Consequences: The case of
+            Luxembourg
+          </h3>
+          <p class="feature__p">
+            We published today a new report of our
+            <b
+              >Circular Economy and Territorial Consequences (CIRCTER)
+              project</b
+            >. This report will focus on the Grand Duchy of Luxembourg, which,
+            at the moment, is developing its national Circular Economy Strategy.
+            In this respect, CIRCTER’s evidence provides further critical
+            insights into the internal ongoing policy processes carried out by
+            different Ministries.
+          </p>
+          <p class="feature__p">
+            <b>Claude Turmes, Minister for Spatial Planning of Luxembourg</b>,
+            notes in his forward message:
+            <i
+              >"The results of ESPON’s CIRCTER spin-off for Luxembourg come at
+              the right moment, as they provide valuable data and information
+              for setting objectives and drafting roadmaps for implementing
+              circular economy principles in key economic sectors. The
+              territorial analysis allows for the benchmarking of local and
+              national efforts against other regions in Europe and designing
+              tailor-made recommendations. The CIRCTER results position
+              Luxembourg as one of the cutting-edge European regions in terms of
+              circular business models already installed in the country.
+            </i>
+          </p>
+          <p class="feature__p">
+            <i
+              >On the other hand, the analysis highlights very different
+              circularity performance scores across municipalities, thereby
+              confirming the need for coherent governance and strong
+              institutional cooperation along entire value chains, as identified
+              in the National Circular Economy Strategy. This spin-off is also
+              an opportunity for the CIRCTER research team to apply the
+              project’s methodology and tailor the project’s policy
+              recommendations to an almost unique territorial context
+              characterised by a high degree of cross-border integration in the
+              heart of Europe".
+            </i>
+          </p>
+          <p class="feature__p">
+            CIRCTER project produced regional estimates (at NUTS-2 level) for
+            the main material consumption and waste generation and treatment
+            indicators available from Eurostat. In addition, the CIRCTER project
+            developed a sectoral perspective of the circular economy. This
+            differentiates between the demand-side and supply-side of circular
+            product and/or services
+          </p>
+        </div>
+        <!-- feature-end-->
+
+      </div>
+      <!--- list-end-->
+
+      <!-- map-start-->
+      <div class="col-lg-7 mt-5">
+        <div class="row mt-5 mb-5">
+          <div class="col-lg-2">
+        <button
+          type="button"
+          class="btn btn-sm btn-primary"
+          id="flyer"
+          data-toggle="button"
+          aria-pressed="false"
+          autocomplete="off"
+        >
+          Focus <i class="bi bi-geo-alt-fill"></i>
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm btn-primary"
+          id="home"
+          data-toggle="button"
+          aria-pressed="false"
+          autocomplete="off"
+        >
+        <i class="bi bi-house-door-fill"></i>
+        </button>
+      </div>
+      <div class="col-lg-8">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input radio-toggles" type="checkbox" value="" id="flexCheckDefault" checked disabled data-layer='region-layer'>
+          <label class="form-check-label" for="flexCheckDefault">
+            2014 data
+          </label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input radio-toggles" type="checkbox" value="" id="flexCheckChecked" data-layer="region-layer-2006" >
+          <label class="form-check-label" for="flexCheckChecked">
+            2006 data
+          </label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input radio-toggles" type="checkbox" value="" id="flexCheckChecked" data-layer="region-layer-dif">
+          <label class="form-check-label" for="flexCheckChecked">
+            Show difference
+          </label>
+        </div>
+      </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12 only-left"></div>
+<div class="row">
+  <div class="col-lg-3  col-sm-2 col-md-2 only-top"></div>
+  <div class="col-lg-8"></div>
+  <div class="col-lg-1"></div>
+</div>
+<div class="row">
+  <div class="col-lg-12">
+    <div id="map" class=""></div>
+    <div class='map-overlay' id='legend'></div>
+
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-8"></div>
+  <div class="col-lg-4  col-sm-2 col-md-2 only-top"></div>
+</div>
+<div class="row">
+  <div class="col-lg-11 ml-auto only-right text-right attribution">
+    <span>Regional level: NUTS 2 (2013)</span> <br>
+    <span>Source: CIRCTER Project,2018</span> <br>
+    <span>Source: CIRCTER Project,2018</span> <br>
+  </div>
+  </div>
+      </div>
+      </div>
+      <!-- map-end-->
+    </div>
+  </section>
+
+    <!--footer-start-->
+    <!-- Footer -->
+    <footer class="page-footer bg-white shadow font-small pt-4">
+      <!-- Footer Links -->
+      <div class="container text-center text-md-left">
+        <!-- Footer links -->
+        <div class="row text-center text-md-left mt-3 pb-3">
+          <!-- Grid column -->
+          <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
+            <h6 class="text-uppercase mb-4 font-weight-bold">ESPON Portal</h6>
+            <p>
+              The ESPON EGTC is a European Grouping on Territorial Cooperation.
+              ESPON started in 2002 and have continued since then building a
+              pan-European knowledge base related to territorial dynamics.
+            </p>
+          </div>
+          <!-- Grid column -->
+
+          <hr class="w-100 clearfix d-md-none" />
+
+          <!-- Grid column -->
+          <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
+            <h6 class="text-uppercase mb-4 font-weight-bold">Explore</h6>
+            <p>
+              <a href="#">Datastories</a>
+            </p>
+            <p>
+              <a href="#!">Dashboards</a>
+            </p>
+            <p>
+              <a href="#!">Playground</a>
+            </p>
+            <p>
+              <a href="#!">ESPON tools</a>
+            </p>
+          </div>
+          <!-- Grid column -->
+
+          <hr class="w-100 clearfix d-md-none" />
+
+          <!-- Grid column -->
+          <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
+            <h6 class="text-uppercase mb-4 font-weight-bold">Useful links</h6>
+            <p>
+              <a href="#!">ESPON database</a>
+            </p>
+            <p>
+              <a href="#!">ESPON website</a>
+            </p>
+          </div>
+
+          <!-- Grid column -->
+          <hr class="w-100 clearfix d-md-none" />
+
+          <!-- Grid column -->
+          <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
+            <h6 class="text-uppercase mb-4 font-weight-bold">Contact</h6>
+            <p>
+              <i class="fas fa-home mr-3"></i>
+            </p>
+            <p>
+              <i class="fas fa-envelope mr-3"></i>
+            </p>
+            <p>
+              <i class="fas fa-phone mr-3"></i>
+            </p>
+            <p>
+              <i class="fas fa-print mr-3"></i>
+            </p>
+          </div>
+          <!-- Grid column -->
+        </div>
+        <!-- Footer links -->
+
+        <hr />
+
+        <!-- Grid row -->
+        <div class="row d-flex align-items-center">
+          <!-- Grid column -->
+          <div class="col-md-7 col-lg-8">
+            <!--Copyright-->
+            <p class="text-center text-md-left">
+              © 2021 Copyright:
+              <a>
+                <strong> ESPON EGTC</strong>
+              </a>
+            </p>
+          </div>
+          <!-- Grid column -->
+
+          <!-- Grid column -->
+          <div class="col-md-5 col-lg-4 ml-lg-0">
+            <!-- Social buttons -->
+            <div class="text-center text-md-right">
+              <ul class="list-unstyled list-inline">
+                <li class="list-inline-item">
+                  <a class="btn-floating btn-sm rgba-white-slight mx-1">
+                    <i class="fab fa-facebook-f"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item">
+                  <a class="btn-floating btn-sm rgba-white-slight mx-1">
+                    <i class="fab fa-twitter"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item">
+                  <a class="btn-floating btn-sm rgba-white-slight mx-1">
+                    <i class="fab fa-google-plus-g"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item">
+                  <a class="btn-floating btn-sm rgba-white-slight mx-1">
+                    <i class="fab fa-linkedin-in"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!-- Grid column -->
+        </div>
+        <!-- Grid row -->
+      </div>
+      <!-- Footer Links -->
+    </footer>
+    <!-- Footer -->
+
+    <!--footer-end-->
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+  <script>
+    const csvUrl = "data/waste_data_time.csv";
+    const csvPromise = papaPromise(csvUrl);
+    //YOUR TURN: Replace with your Mapbox Token
+    mapboxgl.accessToken =
+      "pk.eyJ1IjoiZWxrYWxvbmFyaXMiLCJhIjoiY2twbXExOHcwMDg3ZzJvbnc0dXhyOWszOSJ9.AetSK7t4L_aaFVsCuNQmHg";
+
+    var map = new mapboxgl.Map({
+      container: "map",
+      style: "mapbox://styles/mapbox/light-v10", // YOUR TURN: choose a style: https://docs.mapbox.com/api/maps/#styles
+      zoom: 2.7, // zoom level
+      maxZoom: 6,
+      minZoom: 2.4,
+      center: [12, 56],
+      transformRequest: transformRequest,
+    });
+    
+    var chartData = []
+    map.on("load", function () {
+      csvPromise.then(function (results) {
+        results.data.forEach((row) => {
+          chartData.push({new: row.y_2014, old: row.y_2006, dif: row.dif, name: row.tunit_code})
+          map.setFeatureState(
+            {
+              //YOUR TURN: Replace with your source tileset and source layer
+              source: "NUTS_RG_03M_2013_4326_LEVL_2.geojson",
+              //YOUR TURN: Replace with unqiue ID row name
+              id: row.tunit_code,
+            },
+            //YOUR TURN: Add rows you want to style/interact with
+            {
+              name: row.tunit_name ,
+              values: row.y_2014 /1000000,
+              values_2006: row.y_2006 /1000000,
+              difference: row.dif /1000000,
+            }
+          );
+        });
+      });
+      var layers = map.getStyle().layers;
+          var firstSymbolId;
+          for (var i = 0; i < layers.length; i++) {
+          if (layers[i].type === 'symbol') {
+          firstSymbolId = layers[i].id;
+          break;
+          }
+        }
+      //YOUR TURN: Add source layer
+      map.addSource("NUTS_RG_03M_2013_4326_LEVL_2.geojson", {
+        type: "geojson",
+        data: "data/NUTS_RG_03M_2013_4326_LEVL_2.geojson",
+        generateId: true,
+        promoteId: "FID",
+
+      });
+      map.addLayer({
+        id: "region-layer",
+        type: "fill",
+        source: "NUTS_RG_03M_2013_4326_LEVL_2.geojson",
+        layout: {},
+        paint: {
+          "fill-color": [
+            "step",
+            ["to-number", ["feature-state", "values"]],
+            'transparent',
+            0.1,"#84BCF3",
+            1, "#B7D6F7",
+            2, "#509BDE",
+            4, "#2480CD",
+            6,"#84BCF3",
+            8,'#0645A4',
+          ],
+        }
+      },firstSymbolId);
+      map.addLayer({
+        id: "region-layer-2006",
+        type: "fill",
+        source: "NUTS_RG_03M_2013_4326_LEVL_2.geojson",
+        layout: {'visibility':'none'},
+        paint: {
+          "fill-color": [
+            "step",
+            ["to-number", ["feature-state", "values_2006"]],
+            'transparent',
+            0.1,"#84BCF3",
+            1, "#B7D6F7",
+            2, "#509BDE",
+            4, "#2480CD",
+            6,"#84BCF3",
+            8,'#0645A4',
+          ],
+        }
+      },firstSymbolId);
+      map.addLayer({
+        id: "region-layer-dif",
+        type: "fill",
+        source: "NUTS_RG_03M_2013_4326_LEVL_2.geojson",
+        layout: {'visibility':'none'},
+        paint: {
+          "fill-color": [
+            "step",
+            ["to-number", ["feature-state", "difference"]],
+            'transparent',
+            -20, "rgb(255, 172, 71)",
+            -0.0001, "rgb(255, 172, 71)",
+            0, 'transparent',
+            0.0001,'rgb(95, 227, 152)',
+            5,'rgb(95, 227, 152)'
+          ]
+        }
+      },firstSymbolId);
+
+      map.addLayer({
+        id: "region-line-layer",
+        type: "line",
+        source: "NUTS_RG_03M_2013_4326_LEVL_2.geojson",
+        layout: {},
+        paint: {
+          'line-color': 'white',
+          'line-opacity': 0.5,
+          'line-width': 0.5
+        }
+      },firstSymbolId);
+
+
+    });
+
+      $('.radio-toggles').click(function () {
+
+        var clickedLayer = this.dataset.layer;
+        // console.log(clickedLayer)
+        var visibility = map.getLayoutProperty(
+        clickedLayer,
+        'visibility'
+        );
+      
+      // Toggle layer visibility by changing the layout object's visibility property.
+      if (visibility === 'visible') {
+          map.setLayoutProperty(
+          clickedLayer,
+          'visibility',
+          'none'
+          );
+          } else {
+
+          map.setLayoutProperty(
+          clickedLayer,
+          'visibility',
+          'visible'
+          );
+          }
+
+
+       })
+
+
+    var popup = new mapboxgl.Popup({
+      closeButton: false,
+      closeOnClick: false,
+    });
+    var scalePositions =[];
+
+    setTimeout(()=>{
+      var regions = map.getStyle().layers
+      let result = regions.filter(obj => {
+      return obj.id === 'region-layer'
+      })
+      var legendArr = result[0].paint['fill-color']
+
+      
+    // var legendColorScale = legendArr[scalePositions]
+    // console.log(legendColorScale)
+
+    }, 1000)
+    map.on("mousemove", "region-layer", function (e) {
+      map.getCanvas().style.cursor = "pointer";
+
+      var theLayer = "region-layer";
+      var region = map.queryRenderedFeatures(e.point, {
+        layers: [theLayer],
+      });
+
+      // console.log(region);
+      var props = region[0].properties;
+      var val = region[0].state;
+
+      var r = region[0].layer.paint["fill-color"]["r"].toFixed(2);
+      var g = region[0].layer.paint["fill-color"]["g"].toFixed(2);
+      var b = region[0].layer.paint["fill-color"]["b"].toFixed(2);
+
+      var R = (255 * r).toFixed(0);
+      var G = (255 * g).toFixed(0);
+      var B = (255 * b).toFixed(0);
+
+      var color = "rgba(" + [R, G, B].join(",") + ",1)";
+      var theValues = val.values.toLocaleString()
+      var theNames = props.NUTS_NAME
+      // var allTheOld = chartData.old
+ 
+
+      var otherData = chartData.find(obj => obj.name === props.FID);
+      var theDif = otherData.dif / 1000000
+      var theOld = otherData.old  /1000000
+      // console.log(theDif)
+      // console.log(theOld)
+
+
+      var content = "<b>" + props.NUTS_NAME + "</b>" + "<br>";
+      content += "NUTS_2 code: " + props.FID + "<br>";
+      content += "Region: " + props.NUTS_NAME + "<br>";
+      content +=
+        "<div class='something'>" +
+        "<b>" +
+        "2014 waste: " +
+        theValues +
+        "</b>" +
+        " mt per capita" +
+        "</div>";
+        content += '<canvas id="bh1" height="80"></canvas>';
+        content +=
+        "<div class='something'>" +
+          "<b>"+
+        "2016 waste: " +
+        theOld +
+        "</b>" +
+        " mt per capita" +
+        "</div>";
+        content += '<canvas id="bh2" height="80"></canvas>';
+        content +=
+        "<div class='something'>" +
+          "<b>"+
+        "Difference" +
+        theDif +
+        "</b>" +
+        " mt per capita" +
+        "</div>";
+      content += '<canvas id="bh3" height="80"></canvas>';
+
+popup.setLngLat(e.lngLat).setHTML(content).addTo(map);
+
+var difColors = ["#c2e3af", "#c2e3af", "#79929c","#42d4f5", '#007db4']
+const ctx_one = document
+  .getElementById("bh1")
+  .getContext("2d");
+  const ctx_two = document
+  .getElementById("bh2")
+  .getContext("2d");
+  const ctx_three = document
+  .getElementById("bh3")
+  .getContext("2d");
+var chart_one = new Chart(ctx_one, {
+  type: "bar",
+  data: {
+    labels: [''],
+    datasets: [
+      {
+        label: "",
+        data: [theValues],
+        backgroundColor: [color],
+      },
+    ],
+  },
+  options: {
+    indexAxis: "y",
+    legend: { display: false },
+    scaleShowLabels : false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+    title: {
+      display: false,
+    },
+    scales: {
+      x: {
+        min: 0,
+        max: 20,
+      },
+    },
+    yAxes: [
+      {
+        
+        display: false,
+        
+      },
+    ],
+  },
+});
+var chart_two = new Chart(ctx_two, {
+  type: "bar",
+  data: {
+    labels: [''],
+    datasets: [
+      {
+        label: "",
+        data: [theOld],
+        backgroundColor: [color],
+      },
+    ],
+  },
+  options: {
+    indexAxis: "y",
+    legend: { display: false },
+    scaleShowLabels : false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+    title: {
+      display: false,
+    },
+    scales: {
+      x: {
+        min: 0,
+        max: 20,
+      },
+    },
+    yAxes: [
+      {
+        
+        display: false,
+        
+      },
+    ],
+  },
+});
+var chart_three = new Chart(ctx_three, {
+  type: "bar",
+  data: {
+    labels: [''],
+    datasets: [
+      {
+        label: "",
+        data: [theDif],
+        backgroundColor: difColors,
+      },
+    ],
+  },
+  options: {
+    indexAxis: "y",
+    legend: { display: false },
+    scaleShowLabels : false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+    title: {
+      display: false,
+    },
+    scales: {
+      x: {
+        min: -10,
+        max: 10,
+      },
+    },
+    yAxes: [
+      {
+        
+        display: false,
+        
+      },
+    ],
+  },
+});
+});
+    // map.on("idle", function (e) {
+    //   var region = map.queryRenderedFeatures(e.point, {
+    //     layers: ["region-layer"],
+    //   });
+    //   // console.log(region);
+    //   var values = [];
+    //   for (var i = 0; i < 299; i++) {
+    //     var arr = region[i].state.values;
+    //     // console.log(arr)
+    //     values.push(arr);
+
+    //     // var maxPeak = arr.sort((p, c) => p - c)[0];
+    //     // console.log(maxPeak);
+    //   }
+    //   var max = values.sort((a, b) => b - a)[0];
+    //   var min = values.sort((a, b) => a - b)[0];
+    //   console.log(max);
+    //   console.log(min);
+    // });
+
+    map.on("mouseleave", "region-layer", function () {
+      map.getCanvas().style.cursor = "";
+      // myChart.destroy();
+      popup.remove();
+    });
+
+    function transformRequest(url, resourceType) {
+      var isMapboxRequest =
+        url.slice(8, 22) === "api.mapbox.com" ||
+        url.slice(10, 26) === "tiles.mapbox.com";
+      return {
+        url: isMapboxRequest ? url.replace("?", "?pluginName=dataJoins&") : url,
+      };
+    }
+    document.getElementById("flyer").addEventListener("click", function () {
+      // Fly to a random location by offsetting the point -74.50, 40
+      // by up to 5 degrees.
+      map.flyTo({
+        center: [6, 49],
+        zoom: 12.5,
+        essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+      });
+    });
+    document.getElementById("home").addEventListener("click", function () {
+      // Fly to a random location by offsetting the point -74.50, 40
+      // by up to 5 degrees.
+      map.flyTo({
+        zoom: 3, // zoom level
+        center: [12, 56],
+        essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+      });
+    });
+    function papaPromise(url) {
+      return new Promise(function (resolve, reject) {
+        Papa.parse(url, {
+          download: true,
+          header: true,
+          skipEmptyLines: true,
+          complete: resolve,
+        });
+      });
+    }
+  </script>
+</html>
